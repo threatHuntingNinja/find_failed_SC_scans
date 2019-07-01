@@ -1,0 +1,19 @@
+from tenable.sc import TenableSC
+import time
+
+# fill these in
+sc_ip = ''
+sc_uid = ''
+sc_passwd = ''
+
+timer = int(time.time()) - 24 * 3600 * 365      # 365 days
+
+sc = TenableSC(sc_ip)
+sc.login(sc_uid, sc_passwd)
+
+
+for scan in sc.scan_instances.list(start_time=timer)['manageable']:
+    id = int(scan['id'])
+    if scan['status'] != "Completed":
+        scan_results = sc.scan_instances.details(id)
+        print("Scan Status was other than 'Completed' - {}\n\n".format(scan_results))
